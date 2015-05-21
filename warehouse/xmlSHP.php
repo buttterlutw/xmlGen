@@ -6,7 +6,7 @@
 <style type="text/css">
     table{
         border: 1px solid black;
-        width: 2200px;
+        width: 2300px;
     }
     tr, td{
         border: 1px solid black;
