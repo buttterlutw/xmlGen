@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set ("Asia/Taipei");
 $date = date ('YmdH');
-echo 'The file name is: 1_CC_MON_SHP_', $date, '.xml', '<br>';
+$filename = "1_CC_MON_SHP_" . $date . ".xml";
 $xmlShp = new XMLWriter();
 $xmlShp->openMemory();
 $xmlShp->startDocument('1.0','UTF-8');
@@ -32,6 +32,9 @@ foreach($_POST["Order"] as $orderNo) {
 }
 $xmlShp->endElement(); // for orderstatus
 $xmlShp->endDocument();
-echo htmlentities($xmlShp->outputMemory(true));
 
+// Save the file to local
+header("Content-type: text/plain");
+header("Content-Disposition: attachment; filename=".$filename);
+print $xmlShp->outputMemory(true);
 ?>

@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>出貨確認回覆檔(shp)</title>
+<title>出貨確認回覆檔(SHP)</title>
 <style type="text/css">
     table{
         border: 1px solid black;
-        width: 2500px;
+        width: 2200px;
     }
     tr, td{
         border: 1px solid black;
@@ -29,8 +29,11 @@
 			        <td>
 			            Order Info <hr>
 			            <p style="font-size: 15px">
-			                orderid => 一起買序號(RG) <br>
-                            carriageid => 物流服務費的購物子單序號(process_id) <br>
+			                orderid => <br> 
+			                一起買序號(RG) <br>
+                            carriageid => <br> 
+                            物流服務費的process_id <br>
+                            (沒有就填0) <br>
 			            </p>
 			        </td>
 			        <td>&nbsp;</td>
@@ -90,5 +93,6 @@
 		        ?> 
 	        </tbody>
 		</table>
+		<button>送出</button>
 	</form>
 </body>
