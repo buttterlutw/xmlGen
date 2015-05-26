@@ -1,40 +1,55 @@
 <?php
-date_default_timezone_set ("Asia/Taipei");
-$date = date ('YmdH');
-$filename = "1_CC_MON_SHP_" . $date . ".xml";
-$xmlShp = new XMLWriter();
-$xmlShp->openMemory();
-$xmlShp->startDocument('1.0','UTF-8');
-$xmlShp->setIndent(true);
-$xmlShp->startElement('orderstatus');
-$xmlShp->writeElement('orderscnt', sizeof($_POST["Order"]));
-foreach($_POST["Order"] as $orderNo) {
+$filename = $_POST["Filename"];
+$encoding = $_POST["Encoding"];
+$xmlEIN = new XMLWriter();
+$xmlEIN->openMemory();
+$xmlEIN->startDocument('1.0',$encoding);
+$xmlEIN->setIndent(true);
+$xmlEIN->startElement('DCReceiveDoc');
+$xmlEIN->startElement('DocHead');
+$xmlEIN->writeElement('DocNo', $_POST["DocNo"]);
+$xmlEIN->writeElement('DocDate', $_POST["DocDate"]);
+$xmlEIN->startElement('From');
+$xmlEIN->writeElement('FromPartnerCode', $_POST["FromPartnerCode"]);
+$xmlEIN->endElement(); // for From
+$xmlEIN->startElement('To');
+$xmlEIN->writeElement('ToPartnerCode', $_POST["ToPartnerCode"]);
+$xmlEIN->endElement(); // for To
+$xmlEIN->writeElement('DocCount', sizeof($_POST["DCReceive"]));
+$xmlEIN->endElement(); // for DocHead
+$xmlEIN->startElement('DocContent');
+foreach($_POST["DCReceive"] as $orderNo) {
     if(isset($orderNo)) {
-        $xmlShp->startElement('order');
-        $xmlShp->writeElement('orderid',  $_POST["orderid".$orderNo]);
-        $xmlShp->writeElement('carriageid', $_POST["carriageid".$orderNo] );
-        foreach($_POST["Orderitem".$orderNo] as $orderitemNo) {
-            if(isset($orderitemNo)) {
-                $xmlShp->startElement('orderitem');
-                $xmlShp->writeElement('processid', $_POST["processid".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('deliveryno', $_POST["deliveryno".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('carton', $_POST["carton".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('actexportdatetime', $_POST["actexportdatetime".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('status', $_POST["status".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('rmid', $_POST["rmid".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('exportdatetime', $_POST["exportdatetime".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->writeElement('batchnumber', $_POST["batchnumber".$orderNo.'-'.$orderitemNo]);
-                $xmlShp->endElement(); // for orderitem
-            }
+        $xmlEIN->startElement('DCReceive');
+        $xmlEIN->writeElement('ParentId', $_POST["ParentId".$orderNo]);
+        $xmlEIN->writeElement('EshopId', $_POST["EshopId".$orderNo]);
+        $xmlEIN->writeElement('ShipmentNo', $_POST["ShipmentNo".$orderNo]);
+        $xmlEIN->writeElement('DCReceiveDate', $_POST["DCReceiveDate".$orderNo]);
+        $xmlEIN->writeElement('DCReceiveStatus', $_POST["DCReceiveStatus".$orderNo]);
+        $DCRecName = "未設定";
+        switch ($_POST["DCReceiveStatus".$orderNo]) {
+            case 09:
+                $DCRecName = "未到貨";
+                break;
+            case 39:
+                $DCRecName = "條碼資料錯誤";
+                break;
+            case 99:
+                $DCRecName = "不正常到貨";
+                break;
+            default:
+                $DCRecName = "進驗成功";
         }
-        $xmlShp->endElement(); // for order
+        $xmlEIN->writeElement('DCRecName', $DCRecName);
+        $xmlEIN->endElement(); // for DCReceive
     }
 }
-$xmlShp->endElement(); // for orderstatus
-$xmlShp->endDocument();
+$xmlEIN->endElement(); // for DocContent
+$xmlEIN->endElement(); // for DCReceiveDoc
+$xmlEIN->endDocument();
 
 // Save the file to local
-header("Content-type: text/plain");
+header("Content-type: text/plain; charset=".$encoding);
 header("Content-Disposition: attachment; filename=".$filename);
-print $xmlShp->outputMemory(true);
+print $xmlEIN->outputMemory(true);
 ?>

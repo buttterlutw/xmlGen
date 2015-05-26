@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>物流驗收檔(EIN)</title>
+<title>出貨驗證檔(SRP)</title>
 <style type="text/css">
     table, tr, td{
         border: 1px solid black;
@@ -28,12 +28,12 @@ $(document).ready(function(){
 		    ParentId = "823";
 		    EshopId = $("#SupplierIdSel").val();
 		    $("#DocNo").val(ParentId+year+month+day);
-		    $("#FilenameId").val(ParentId+year+month+day+"01.EIN");
+		    $("#FilenameId").val(ParentId+year+month+day+"01.SRP");
 	    } else{
 	    	ParentId = "839";
 	    	EshopId = $("#StoreTypeSel").val();
 	    	$("#DocNo").val(ParentId+EshopId+year+month+day);
-	    	$("#FilenameId").val(ParentId+EshopId+year+month+day+"01.EIN");
+	    	$("#FilenameId").val(ParentId+EshopId+year+month+day+"01.SRP");
 	    }
 	    $(".ParentId").val(ParentId);
 	    $(".EshopId").val(EshopId);
@@ -43,13 +43,13 @@ $(document).ready(function(){
 </head>
 
 <body>
-	<h1>物流驗收檔-999XXXyyyymmdd99.EIN</h1>
+	<h1>出貨驗證檔-999XXXyyyymmdd99.SRP</h1>
 	<form action="input.php" method="post">
         <?php
             date_default_timezone_set("Asia/Taipei");
             $date = date('Y-m-d');
             $dateString = date('Ymd');
-		    $eshopcode = "823"; // 購物中心7-11直店配
+		    $stcode = "991182"; // 馥樺門市
 		    $childid = "A53"; // 興奇雅虎測試(4866)
         ?>
         <button>送出</button>
@@ -57,15 +57,15 @@ $(document).ready(function(){
 		    <tbody>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td colspan="5">
+			        <td colspan="6">
 			            文件編碼 <select id="EncodingSel" name="Encoding">
-			                <option value="big5">big5(EIN預設值)</option>
+			                <option value="big5">big5(SRP預設值)</option>
 		                    <option value="utf-8">utf-8</option>
 			        </td>
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td colspan="5">
+			        <td colspan="6">
 			            超商類型 <select id="StoreTypeSel" name="StoreType">
 			                <option value="823">7-11(823)</option>
 		                    <option value="001">7-11(839001)(南崁)</option>
@@ -74,7 +74,7 @@ $(document).ready(function(){
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td colspan="5">
+			        <td colspan="6">
 			            供應商 <select id="SupplierIdSel" name="SupplierId">
 			                <option value="A53">興奇雅虎測試(4866)</option>
 		                    <option value="A14">興奇倉庫(551)</option>
@@ -82,42 +82,39 @@ $(document).ready(function(){
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td colspan="5">DocHead</td>
+			        <td colspan="6">總筆數(大於本次回饋筆數就好) = <input name="TotalCount" type="text"></td>
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td>DocNo = <input id="DocNo" name="DocNo" type="text" value="823<?php echo $dateString; ?>01"></td>
-			        <td>DocDate = <input name="DocDate" type="text" value="<?php echo $date; ?>"></td>
-			        <td>FromPartnerCode = <input name="FromPartnerCode" type="text" value="000"></td>
-			        <td colspan="2" rowspan="1">ToPartnerCode = <input name="ToPartnerCode" type="text" value="999"></td>
-		        </tr>
-		        <tr>
-		            <td>&nbsp;</td>
-			        <td colspan="5">DocContent/DCReceive</td>
+			        <td colspan="6">SRP Contents</td>
 		        </tr>
 		        <?php
 		            for($i = 1; $i <= 10; $i ++) {
 		                echo '
                             <tr>
-                            <td><input name="DCReceive[]" type="checkbox" value="'.$i.'"></td>
-            			    <td>ParentId = <input name="ParentId'.$i.'" class="ParentId" type="text" value="'.$eshopcode.'"></td>
-            			    <td>EshopId = <input name="EshopId'.$i.'" class="EshopId" type="text" value="'.$childid.'"></td>
-            			    <td>ShipmentNo = <input name="ShipmentNo'.$i.'" type="text"></td>
-            			    <td>DCReceiveDate = <input name="DCReceiveDate'.$i.'" type="text" value="'.$date.'"></td>
+                            <td><input name="SRP[]" type="checkbox" value="'.$i.'"></td>
+            			    <td>子代碼 = <input name="EshopId'.$i.'" class="EshopId" maxlength="3" size="5" type="text" value="'.$childid.'"></td>
+            			    <td>出貨單號(spst_shpno) = <input name="ShipmentNo'.$i.'" size="12" type="text"></td>
+            			    <td>日期(YYYYMMDD) = <input name="Date'.$i.'" maxlength="6" size="12" type="text" value="'.$dateString.'"></td>
             			    <td>
-		                        DCReceiveStatus/DCRecName = <select name="DCReceiveStatus'.$i.'">
-		                            <option value="00">(00)進驗成功</option>
-		                            <option value="09">(09)未到貨</option>
-		                            <option value="39">(39)條碼資料錯誤</option>
-		                            <option value="99">(99)不正常到貨</option>
-		                    </td>
+	                            門市代號 = <select name="StCode'.$i.'" class="StCode" type="text" value="'.$stcode.'">
+		                            <option value="991182">(991182)馥樺門市</option>
+		                            <option value="967905">(967905)中正大學門市</option>
+		                            <option value="163925">(163925)里宬門市</option>
+            			    </td>
+		                    <td>出貨單金額 = <input name="Amount'.$i.'" maxlength="5" size="8" type="text"></td>
+                            <td>
+                                回覆訊息代碼 = <select name="SRPCode'.$i.'" class="SRPCode" type="text">
+		                            <option value="01110">(01110)門市已關轉店</option>
+		                            <option value="01109">(01109)出貨編號已存在</option>
+                            </td>
                             </tr>                              
                         ';
 		            }
 		        ?>
 		        <tr>
 			       <td>&nbsp;</td>
-			       <td colspan="5">The filename is <input size="28" id="FilenameId" name="Filename" type="text" value="823<?php echo $dateString; ?>01.EIN"></td>
+			       <td colspan="6">The filename is <input size="28" id="FilenameId" name="Filename" type="text" value="823<?php echo $dateString; ?>01.SRP"></td>
 			    </tr>
 	        </tbody>
 		</table>
