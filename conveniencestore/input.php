@@ -1,12 +1,14 @@
 <?php
 $filename = $_POST["Filename"];
 $encoding = $_POST["Encoding"];
-
 $pattern = '/(\d+)\.(\w+)$/';
 preg_match($pattern, $filename, $matches); // $matches[2] = extension file name (EX. EIN/SRP/PPS)
 
 $xmlWriter = new XMLWriter();
 $xmlWriter->openMemory();
+$xmlWriter->startDocument('1.0',$encoding);
+$xmlWriter->setIndent(true);
+
 if($matches[2] == "SRP") {
     $totalCount = $_POST["TotalCount"];
     $xmlWriter->text($totalCount."\n"); // Total orders' count
@@ -22,8 +24,6 @@ if($matches[2] == "SRP") {
     }
 }
 elseif($matches[2] == "EIN") {
-    $xmlWriter->startDocument('1.0',$encoding);
-    $xmlWriter->setIndent(true);
     $xmlWriter->startElement('DCReceiveDoc');
     $xmlWriter->startElement('DocHead');
     $xmlWriter->writeElement('DocNo', $_POST["DocNo"]);
@@ -65,6 +65,38 @@ elseif($matches[2] == "EIN") {
     }
     $xmlWriter->endElement(); // for DocContent
     $xmlWriter->endElement(); // for DCReceiveDoc
+    $xmlWriter->endDocument();
+}
+elseif($matches[2] == "PPS") {
+    $xmlWriter->startElement('PPSDoc');
+    $xmlWriter->startElement('DocHead');
+    $xmlWriter->writeElement('DocNo', $_POST["DocNo"]);
+    $xmlWriter->writeElement('DocDate', $_POST["DocDate"]);
+    $xmlWriter->startElement('From');
+    $xmlWriter->writeElement('FromPartnerCode', $_POST["FromPartnerCode"]);
+    $xmlWriter->endElement(); // for From
+    $xmlWriter->startElement('To');
+    $xmlWriter->writeElement('ToPartnerCode', $_POST["ToPartnerCode"]);
+    $xmlWriter->endElement(); // for To
+    $xmlWriter->writeElement('DocCount', sizeof($_POST["PPS"]));
+    $xmlWriter->endElement(); // for DocHead
+    $xmlWriter->startElement('DocContent');
+    foreach($_POST["PPS"] as $pps) {
+        if(isset($pps)) {
+            $xmlWriter->startElement('PPS');
+            $xmlWriter->writeElement('ParentId', $_POST["ParentId".$pps]);
+            $xmlWriter->writeElement('EshopId', $_POST["EshopId".$pps]);
+            $xmlWriter->writeElement('ShipmentNo', $_POST["ShipmentNo".$pps]);
+            $xmlWriter->writeElement('StoreID', $_POST["StCode".$pps]);
+            $xmlWriter->writeElement('StoreDate', $_POST["StoreDate".$pps]);
+            $xmlWriter->writeElement('StoreTime', $_POST["StoreTime".$pps]);
+            $xmlWriter->writeElement('StoreType', $_POST["StoreType".$pps]);
+            $xmlWriter->writeElement('TelNo', '');
+            $xmlWriter->endElement(); // for PPS
+        }
+    }
+    $xmlWriter->endElement(); // for DocContent
+    $xmlWriter->endElement(); // for PPSDoc
     $xmlWriter->endDocument();
 }
 else{

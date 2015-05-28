@@ -57,7 +57,7 @@ $(document).ready(function(){
 			        <td colspan="6">
 			            文件編碼 <select id="EncodingSel" name="Encoding">
 			                <option value="big5">big5(SRP預設值)</option>
-		                    <option value="utf-8">utf-8</option>
+		                    <option value="utf-8">utf-8</option></select>
 			        </td>
 		        </tr>
 		        <tr>
@@ -66,7 +66,7 @@ $(document).ready(function(){
 			            超商類型 <select id="StoreTypeSel" name="StoreType">
 			                <option value="823">7-11(823)</option>
 		                    <option value="001">7-11(839001)(南崁)</option>
-                            <option value="002">7-11(839002)(大園)</option>
+                            <option value="002">7-11(839002)(大園)</option></select>
 			        </td>
 		        </tr>
 		        <tr>
@@ -74,7 +74,7 @@ $(document).ready(function(){
 			        <td colspan="6">
 			            供應商 <select id="SupplierIdSel" name="SupplierId">
 			                <option value="A53">興奇雅虎測試(4866)</option>
-		                    <option value="A14">興奇倉庫(551)</option>
+		                    <option value="A14">興奇倉庫(551)</option></select>
 			        </td>
 		        </tr>
 		        <tr>
@@ -98,7 +98,7 @@ $(document).ready(function(){
                             <td>
                                 回覆訊息代碼 = <select name="SRPCode'.$i.'" class="SRPCode" type="text">
 		                            <option value="01110">(01110)門市已關轉店</option>
-		                            <option value="01109">(01109)出貨編號已存在</option>
+		                            <option value="01109">(01109)出貨編號已存在</option></select>
                             </td>
                             </tr>                              
                         ';
