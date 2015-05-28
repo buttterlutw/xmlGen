@@ -44,7 +44,7 @@ $(document).ready(function(){
 
 <body>
 	<h1>門市到店檔-999XXXyyyymmdd99.PPS</h1>
-	<form action="input.php" method="post">
+	<form action="../input.php" method="post">
         <?php
             date_default_timezone_set("Asia/Taipei");
             $date = date('Y-m-d');

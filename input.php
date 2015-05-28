@@ -6,10 +6,72 @@ preg_match($pattern, $filename, $matches); // $matches[2] = extension file name 
 
 $xmlWriter = new XMLWriter();
 $xmlWriter->openMemory();
-$xmlWriter->startDocument('1.0',$encoding);
+if($encoding == 'big5') {
+    $xmlWriter->startDocument('1.0', $encoding, 'yes');    
+}
+else{
+    $xmlWriter->startDocument('1.0', $encoding);
+}
 $xmlWriter->setIndent(true);
 
-if($matches[2] == "SRP") {
+if($matches[2] == "xml") {
+    if(preg_match('/SHP/', $filename)) {
+        $xmlWriter->startElement('orderstatus');
+        $xmlWriter->writeElement('orderscnt', sizeof($_POST["Order"]));
+        foreach($_POST["Order"] as $orderNo) {
+            if(isset($orderNo)) {
+                $xmlWriter->startElement('order');
+                $xmlWriter->writeElement('orderid',  $_POST["orderid".$orderNo]);
+                $xmlWriter->writeElement('carriageid', $_POST["carriageid".$orderNo] );
+                foreach($_POST["Orderitem".$orderNo] as $orderitemNo) {
+                    if(isset($orderitemNo)) {
+                        $xmlWriter->startElement('orderitem');
+                        $xmlWriter->writeElement('processid', $_POST["processid".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('deliveryno', $_POST["deliveryno".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('carton', $_POST["carton".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('actexportdatetime', $_POST["actexportdatetime".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('status', $_POST["status".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('rmid', $_POST["rmid".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('exportdatetime', $_POST["exportdatetime".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->writeElement('batchnumber', $_POST["batchnumber".$orderNo.'-'.$orderitemNo]);
+                        $xmlWriter->endElement(); // for orderitem
+                    }
+                }
+                $xmlWriter->endElement(); // for order
+            }
+        }
+        $xmlWriter->endElement(); // for orderstatus
+        $xmlWriter->endDocument();
+    }
+    elseif(preg_match('/CST/', $filename)) {
+        $xmlWriter->startElement('RECEIPT');
+        foreach($_POST["CST"] as $cst) {
+            if(isset($cst)) {
+                $xmlWriter->startElement('RECEIPTDETAIL');
+                $xmlWriter->writeElement('TYPE', '0');
+                $xmlWriter->writeElement('EXTERNRECEIPTKEY', $_POST["EXTERNRECEIPTKEY".$cst]);
+                $xmlWriter->writeElement('RECEIPTDATE', $_POST["RECEIPTDATE".$cst]);
+                $xmlWriter->writeElement('RECEIPTKEY', '');
+                $xmlWriter->writeElement('SKU', $_POST["SKU".$cst]);
+                $xmlWriter->startElement('DESCR');
+                $xmlWriter->writeCData($_POST["DESCR".$cst]);
+                $xmlWriter->endElement(); // for DESCR
+                $xmlWriter->writeElement('NORMALQTY', $_POST["NORMALQTY".$cst]);
+                $xmlWriter->writeElement('BADQTY', $_POST["BADQTY".$cst]);
+                $xmlWriter->writeElement('CCLENGTH', $_POST["CCLENGTH".$cst]);
+                $xmlWriter->writeElement('CCWIDTH', $_POST["CCWIDTH".$cst]);
+                $xmlWriter->writeElement('CCHEIGHT', $_POST["CCHEIGHT".$cst]);
+                $xmlWriter->writeElement('CCWEIGHT', $_POST["CCWEIGHT".$cst]);
+                $xmlWriter->writeElement('BARCODE', $_POST["BARCODE".$cst]);
+                $xmlWriter->writeElement('LIMIT_YN', $_POST["LIMIT_YN".$cst]);
+                $xmlWriter->writeElement('LIMIT_DEALINE', $_POST["LIMIT_DEALINE".$cst]);
+                $xmlWriter->endElement(); // for RECEIPTDETAIL
+            }
+        } 
+        $xmlWriter->endElement(); // for RECEIPT
+    }
+}
+elseif($matches[2] == "SRP") {
     $totalCount = $_POST["TotalCount"];
     $xmlWriter->text($totalCount."\n"); // Total orders' count
     $failedCount = sizeof($_POST["SRP"]);
@@ -100,10 +162,8 @@ elseif($matches[2] == "PPS") {
     $xmlWriter->endDocument();
 }
 else{
-    echo "We don't support this extension now: ".$matches[2];
+    //echo "We don't support this extension now: ".$matches[2];
 }
-
-
 
 // Save the file to local
 header("Content-type: text/plain; charset=".$encoding);

@@ -16,14 +16,27 @@
 
 <body>
 	<h1>出貨確認回覆檔-CC_MON_SHP_YYYYMMDDHH.xml</h1>
-	<form action="input.php" method="post">
+	<form action="../input.php" method="post">
         <?php
-            date_default_timezone_set ( "Asia/Taipei" );
-            $date = date ( 'Y-m-d H:i' );
+            date_default_timezone_set ("Asia/Taipei");
+            $date = date ('Y-m-d H:i');
+            $dateString = date('YmdH');
         ?>
         <button>送出</button>
         <table id="shpItems">
 		    <tbody>
+		        <tr>
+		            <td>&nbsp;</td>
+			        <td colspan="3">
+			            文件編碼 <select id="EncodingSel" name="Encoding">
+			                <option value="big5">big5(南崁倉/東源倉預設)</option>
+		                    <option value="utf-8">utf-8(大園倉預設)</option></select>
+			        </td>
+		        </tr>
+		        <tr>
+			       <td>&nbsp;</td>
+			       <td colspan="3">The filename is <input id="FilenameId" name="Filename" maxlength="25" size="37" type="text" value="1_CC_MON_SHP_<?php echo $dateString; ?>.xml"></td>
+			    </tr>
 		        <tr>
 			        <td>&nbsp;</td>
 			        <td>
@@ -54,8 +67,8 @@
 		        <?php 
 		            for ($i = 1; $i <= 10; $i ++) { // 預設10筆order
 		                echo '<tr>
-			                      <td colspan="1" rowspan="5"><input name="Order[]" type="checkbox" value="'.$i.'"></td>
-                                  <td colspan="1" rowspan="5">
+			                      <td colspan="1" rowspan="3"><input name="Order[]" type="checkbox" value="'.$i.'"></td>
+                                  <td colspan="1" rowspan="3">
 	                                  Order '.$i.' <br>
                                       orderid = <input name="orderid'.$i.'" type="text"> <br>
                                       carriageid = <input name="carriageid'.$i.'" type="text"> <br>
@@ -67,13 +80,17 @@
                                       deliveryno = <input name="deliveryno'.$i.'-1" type="text">
                                       carton = <input name="carton'.$i.'-1" type="text">
                                       actexportdatetime = <input name="actexportdatetime'.$i.'-1" type="text" value="'.$date.'">  
-                                      status = <input name="status'.$i.'-1" type="text">  
+                                      status = <select name="status'.$i.'-1">
+		                                  <option value="1">1-出貨成功</option>
+		                                  <option value="2">2-出貨失敗(缺貨取消)</option>
+		                                  <option value="3">3-出貨失敗(回補)</option>
+		                                  <option value="4">4-出貨失敗(超材回補)</option></select>
                                       rmid = <input name="rmid'.$i.'-1" type="text">
                                       exportdatetime = <input name="exportdatetime'.$i.'-1" type="text" value="'.$date.'">
                                       batchnumber = <input name="batchnumber'.$i.'-1" type="text">
                                   </td>
 		                      </tr>';
-		                for ($j = 2; $j <= 5; $j ++) { // 預設每筆order有5筆orderitem
+		                for ($j = 2; $j <= 3; $j ++) { // 預設每筆order有5筆orderitem
 		                    echo '<tr>
 		                              <td><input name="Orderitem'.$i.'[]" type="checkbox" value="'.$j.'"></td>
 			                          <td>
@@ -82,7 +99,11 @@
                                           deliveryno = <input name="deliveryno'.$i.'-'.$j.'" type="text">
                                           carton = <input name="carton'.$i.'-'.$j.'" type="text">
                                           actexportdatetime = <input name="actexportdatetime'.$i.'-'.$j.'" type="text" value="'.$date.'">
-                                          status = <input name="status'.$i.'-'.$j.'" type="text">
+                                          status = <select name="status'.$i.'-'.$j.'">
+                                              <option value="1">1-出貨成功</option>
+		                                      <option value="2">2-出貨失敗(缺貨取消)</option>
+		                                      <option value="3">3-出貨失敗(回補)</option>
+		                                      <option value="4">4-出貨失敗(超材回補)</option></select>
                                           rmid = <input name="rmid'.$i.'-'.$j.'" type="text">
                                           exportdatetime = <input name="exportdatetime'.$i.'-'.$j.'" type="text" value="'.$date.'"> 
                                           batchnumber = <input name="batchnumber'.$i.'-'.$j.'" type="text">

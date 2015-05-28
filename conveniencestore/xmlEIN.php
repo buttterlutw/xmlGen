@@ -44,7 +44,7 @@ $(document).ready(function(){
 
 <body>
 	<h1>物流驗收檔-999XXXyyyymmdd99.EIN</h1>
-	<form action="input.php" method="post">
+	<form action="../input.php" method="post">
         <?php
             date_default_timezone_set("Asia/Taipei");
             $date = date('Y-m-d');

@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 <body>
 	<h1>出貨驗證檔-999XXXyyyymmdd99.SRP</h1>
-	<form action="input.php" method="post">
+	<form action="../input.php" method="post">
         <?php
             date_default_timezone_set("Asia/Taipei");
             $date = date('Y-m-d');
