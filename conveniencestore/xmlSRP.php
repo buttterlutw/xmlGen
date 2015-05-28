@@ -27,15 +27,12 @@ $(document).ready(function(){
 	    if($("#StoreTypeSel").val() == "823") {
 		    ParentId = "823";
 		    EshopId = $("#SupplierIdSel").val();
-		    $("#DocNo").val(ParentId+year+month+day);
 		    $("#FilenameId").val(ParentId+year+month+day+"01.SRP");
 	    } else{
 	    	ParentId = "839";
 	    	EshopId = $("#StoreTypeSel").val();
-	    	$("#DocNo").val(ParentId+EshopId+year+month+day);
 	    	$("#FilenameId").val(ParentId+EshopId+year+month+day+"01.SRP");
 	    }
-	    $(".ParentId").val(ParentId);
 	    $(".EshopId").val(EshopId);
     });
 });
@@ -82,7 +79,7 @@ $(document).ready(function(){
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
-			        <td colspan="6">總筆數(大於本次回饋筆數就好) = <input name="TotalCount" type="text"></td>
+			        <td colspan="6">總筆數(大於本次回饋筆數就好) = <input name="TotalCount" type="text" value="100"></td>
 		        </tr>
 		        <tr>
 		            <td>&nbsp;</td>
@@ -94,14 +91,9 @@ $(document).ready(function(){
                             <tr>
                             <td><input name="SRP[]" type="checkbox" value="'.$i.'"></td>
             			    <td>子代碼 = <input name="EshopId'.$i.'" class="EshopId" maxlength="3" size="5" type="text" value="'.$childid.'"></td>
-            			    <td>出貨單號(spst_shpno) = <input name="ShipmentNo'.$i.'" size="12" type="text"></td>
+            			    <td>出貨單號(spst_shpno) = <input name="ShipmentNo'.$i.'" maxlength="8" size="12" type="text"></td>
             			    <td>日期(YYYYMMDD) = <input name="Date'.$i.'" maxlength="6" size="12" type="text" value="'.$dateString.'"></td>
-            			    <td>
-	                            門市代號 = <select name="StCode'.$i.'" class="StCode" type="text" value="'.$stcode.'">
-		                            <option value="991182">(991182)馥樺門市</option>
-		                            <option value="967905">(967905)中正大學門市</option>
-		                            <option value="163925">(163925)里宬門市</option>
-            			    </td>
+            			    <td>門市代號(馥樺門市:991182) = <input name="StCode'.$i.'" maxlength="6" size="12" type="text" value="'.$stcode.'"></td>
 		                    <td>出貨單金額 = <input name="Amount'.$i.'" maxlength="5" size="8" type="text"></td>
                             <td>
                                 回覆訊息代碼 = <select name="SRPCode'.$i.'" class="SRPCode" type="text">
@@ -116,6 +108,10 @@ $(document).ready(function(){
 			       <td>&nbsp;</td>
 			       <td colspan="6">The filename is <input size="28" id="FilenameId" name="Filename" type="text" value="823<?php echo $dateString; ?>01.SRP"></td>
 			    </tr>
+			    <tr>
+			       <td>&nbsp;</td>
+			       <td colspan="6"><a target="_blank" href="http://emap.pcsc.com.tw/emap.aspx">門市代碼線上查詢</a></td>
+			    </tr>   
 	        </tbody>
 		</table>
 	</form>
